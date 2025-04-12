@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WordShift</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Helvetica Neue', sans-serif;
+      background: #0f0f0f;
+      color: white;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    #timer {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      font-size: 1rem;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #1c1c1c;
+      color: white;
+    }
+    #result {
+      display: none;
+      margin-top: 20px;
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 10px;
+    }
+    .score {
+      font-size: 1.1rem;
+      margin-top: 10px;
+    }
+    .highlight {
+      color: #00ffe7;
+    }
+  </style>
+</head>
+<body>
+  <h1>WordShift</h1>
+  <div id="timer">Time Remaining: <span id="time">60</span> seconds</div>
+  <textarea id="input" placeholder="Start typing your words here..."></textarea>
+  <div id="result">
+    <h2>Your Emotional Vocabulary Report</h2>
+    <div class="score">Total Words: <span id="totalWords" class="highlight"></span></div>
+    <div class="score">Positive Words: <span id="positiveCount" class="highlight"></span></div>
+    <div class="score">Neutral Words: <span id="neutralCount" class="highlight"></span></div>
+    <div class="score">Negative Words: <span id="negativeCount" class="highlight"></span></div>
+  </div>
+
+  <script>
+    const input = document.getElementById("input");
+    const timerDisplay = document.getElementById("time");
+    const result = document.getElementById("result");
+    const totalWordsEl = document.getElementById("totalWords");
+    const positiveCountEl = document.getElementById("positiveCount");
+    const neutralCountEl = document.getElementById("neutralCount");
+    const negativeCountEl = document.getElementById("negativeCount");
+
+    const positiveWords = ["love", "joy", "hope", "grace", "happy", "blessed", "calm", "flow", "peace", "strong", "grow", "heal"];
+    const negativeWords = ["hate", "fear", "pain", "rage", "sad", "angry", "broken", "lost", "grief", "weak", "hurt", "fail"];
+
+    let timeLeft = 60;
+    let timer = setInterval(() => {
+      timeLeft--;
+      timerDisplay.textContent = timeLeft;
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        input.disabled = true;
+        analyzeText(input.value);
+      }
+    }, 1000);
+
+    function analyzeText(text) {
+      let words = text.toLowerCase().replace(/[^a-zA-Z ]/g, "").split(/\s+/).filter(w => w.length > 0);
+      let positive = 0, neutral = 0, negative = 0;
+
+      words.forEach(word => {
+        if (positiveWords.includes(word)) positive++;
+        else if (negativeWords.includes(word)) negative++;
+        else neutral++;
+      });
+
+      totalWordsEl.textContent = words.length;
+      positiveCountEl.textContent = positive;
+      neutralCountEl.textContent = neutral;
+      negativeCountEl.textContent = negative;
+      result.style.display = "block";
+    }
+  </script>
+</body>
+</html>
